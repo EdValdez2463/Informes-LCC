@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informes Eléctricos</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --surface2: #1c2030;
+    --border: #2a3050;
+    --accent: #00e5ff;
+    --accent2: #ff6b00;
+    --text: #dde3f0;
+    --muted: #6b7a99;
+    --success: #00ff88;
+    --error: #ff3d3d;
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Barlow', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(0,229,255,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(255,107,0,0.04) 0%, transparent 60%);
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    background: rgba(13,15,20,0.95);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo::before {
+    content: '';
+    display: block;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-tab {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 6px 16px;
+    border: 1px solid transparent;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .nav-tab.active, .nav-tab:hover {
+    color: var(--accent);
+    border-color: var(--border);
+    background: var(--surface);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* SECTION TITLE */
+  .section-header {
+    margin-bottom: 32px;
+  }
+
+  .section-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .section-header h1 span {
+    color: var(--accent);
+  }
+
+  .section-header p {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  /* FORM */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .form-section {
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-section:last-child { border-bottom: none; }
+
+  .form-section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .form-row.single { grid-template-columns: 1fr; }
+  .form-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  input, select, textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 10px 12px;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(0,229,255,0.1);
+  }
+
+  textarea { resize: vertical; min-height: 90px; }
+
+  select option { background: var(--surface2); }
+
+  /* ENSAYOS */
+  .ensayos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .ensayo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .ensayo-item:hover { border-color: var(--muted); }
+
+  .ensayo-item.selected {
+    border-color: var(--accent);
+    background: rgba(0,229,255,0.07);
+  }
+
+  .ensayo-item input[type="checkbox"] { display: none; }
+
+  .checkmark {
+    width: 16px; height: 16px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .ensayo-item.selected .checkmark {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .checkmark::after {
+    content: '✓';
+    font-size: 10px;
+    color: #000;
+    opacity: 0;
+    transition: opacity 0.1s;
+  }
+
+  .ensayo-item.selected .checkmark::after { opacity: 1; }
+
+  .ensayo-name {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  /* RESULTADO ENSAYO */
+  .resultado-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+
+  .resultado-row .ensayo-tag {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+
+  .resultado-select {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .resultado-ok { border-color: var(--success) !important; color: var(--success); }
+  .resultado-fail { border-color: var(--error) !important; color: var(--error); }
+  .resultado-cond { border-color: var(--accent2) !important; color: var(--accent2); }
+
+  /* SUBMIT */
+  .form-actions {
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 32px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover { background: #33eeff; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-secondary {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 10px 20px;
+    background: none;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover { color: var(--text); border-color: var(--muted); }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 14px 24px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  #toast.show { opacity: 1; transform: translateY(0); }
+  #toast.success { background: var(--success); color: #000; }
+  #toast.error { background: var(--error); color: #fff; }
+
+  /* LISTA INFORMES */
+  #view-lista { display: none; }
+
+  .informe-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .informe-card:hover { border-color: var(--muted); }
+
+  .informe-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .informe-equipo {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .informe-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .informe-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+  }
+
+  .badge-ok { background: rgba(0,255,136,0.1); color: var(--success); border: 1px solid rgba(0,255,136,0.3); }
+  .badge-falla { background: rgba(255,61,61,0.1); color: var(--error); border: 1px solid rgba(255,61,61,0.3); }
+  .badge-condicional { background: rgba(255,107,0,0.1); color: var(--accent2); border: 1px solid rgba(255,107,0,0.3); }
+
+  .informe-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--muted);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .empty-state::before {
+    content: '[ ]';
+    display: block;
+    font-size: 32px;
+    margin-bottom: 12px;
+    color: var(--border);
+  }
+
+  .loading {
+    text-align: center;
+    padding: 60px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  .loading::after {
+    content: '...';
+    animation: dots 1.5s infinite;
+  }
+
+  @keyframes dots {
+    0% { content: '.'; }
+    33% { content: '..'; }
+    66% { content: '...'; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; }
+    .form-row.triple { grid-template-columns: 1fr 1fr; }
+    .nav-tabs { gap: 2px; }
+    .nav-tab { padding: 6px 10px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">INFEL · INFORMES</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('nuevo')">+ Nuevo Informe</button>
+    <button class="nav-tab" onclick="showView('lista')">Ver Informes</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- VISTA: NUEVO INFORME -->
+  <div id="view-nuevo">
+    <div class="section-header">
+      <h1>Nuevo <span>Informe</span></h1>
+      <p>Complete los datos del trabajo realizado</p>
+    </div>
+
+    <div class="form-card">
+
+      <!-- TÉCNICO Y FECHA -->
+      <div class="form-section">
+        <div class="form-section-label">Identificación</div>
+        <div class="form-row">
+          <div class="field">
+            <label>Técnico responsable *</label>
+            <input type="text" id="tecnico" placeholder="Nombre completo">
+          </div>
+          <div class="field">
+            <label>Fecha del trabajo *</label>
+            <input type="date" id="fecha">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Empresa / Contrato</label>
+            <input type="text" id="empresa" placeholder="Nombre de la empresa o proyecto">
+          </div>
+          <div class="field">
+            <label>Orden de trabajo / N° informe</label>
+            <input type="text" id="ot" placeholder="OT-001">
+          </div>
+        </div>
+      </div>
+
+      <!-- EQUIPO -->
+      <div class="form-section">
+        <div class="form-section-label">Equipo intervenido</div>
+        <div class="form-row">
+          <div class="field">
+            <label>Nombre del equipo *</label>
+            <input type="text" id="equipo" placeholder="Ej: Transformador TR-01">
+          </div>
+          <div class="field">
+            <label>Código / TAG del equipo</label>
+            <input type="text" id="tag_equipo" placeholder="Ej: TR-01-SAS">
+          </div>
+        </div>
+        <div class="form-row triple">
+          <div class="field">
+            <label>Tipo de equipo</label>
+            <select id="tipo_equipo">
+              <option value="">— Seleccionar —</option>
+              <option>Transformador de Potencia</option>
+              <option>Transformador de Distribución</option>
+              <option>Transformador de Medida (TC/TP)</option>
+              <option>Interruptor / Disyuntor</option>
+              <option>Seccionador</option>
+              <option>Celda MT/AT</option>
+              <option>Tablero BT</option>
+              <option>Motor Eléctrico</option>
+              <option>Generador</option>
+              <option>Puesta a Tierra</option>
+              <option>Cable / Línea</option>
+              <option>Instrumento / Sensor</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tensión nominal</label>
+            <input type="text" id="tension" placeholder="Ej: 13,8 kV">
+          </div>
+          <div class="field">
+            <label>Potencia / Corriente nominal</label>
+            <input type="text" id="potencia" placeholder="Ej: 1000 kVA">
+          </div>
+        </div>
+      </div>
+
+      <!-- UBICACIÓN -->
+      <div class="form-section">
+        <div class="form-section-label">Ubicación</div>
+        <div class="form-row">
+          <div class="field">
+            <label>Planta / Instalación *</label>
+            <input type="text" id="planta" placeholder="Ej: Subestación Norte">
+          </div>
+          <div class="field">
+            <label>Área / Sala</label>
+            <input type="text" id="area" placeholder="Ej: Sala de Celdas MT">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Dirección / Ciudad</label>
+            <input type="text" id="direccion" placeholder="Ciudad o dirección del sitio">
+          </div>
+          <div class="field">
+            <label>Coordenadas GPS (opcional)</label>
+            <input type="text" id="gps" placeholder="Ej: -33.4569, -70.6483">
+          </div>
+        </div>
+      </div>
+
+      <!-- ENSAYOS -->
+      <div class="form-section">
+        <div class="form-section-label">Ensayos realizados</div>
+        <div class="ensayos-grid" id="ensayos-grid">
+          <!-- generados por JS -->
+        </div>
+      </div>
+
+      <!-- RESULTADOS -->
+      <div class="form-section" id="resultados-section" style="display:none">
+        <div class="form-section-label">Resultados por ensayo</div>
+        <div id="resultados-lista"></div>
+      </div>
+
+      <!-- OBSERVACIONES -->
+      <div class="form-section">
+        <div class="form-section-label">Observaciones y conclusiones</div>
+        <div class="form-row single">
+          <div class="field">
+            <label>Condición general del equipo *</label>
+            <select id="condicion_general">
+              <option value="">— Seleccionar —</option>
+              <option value="OK">✅ Apto — Sin observaciones</option>
+              <option value="CONDICIONAL">⚠️ Condicional — Requiere seguimiento</option>
+              <option value="FALLA">❌ Fuera de servicio — Requiere intervención</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="field">
+            <label>Observaciones técnicas</label>
+            <textarea id="observaciones" placeholder="Describa hallazgos, anomalías, recomendaciones..."></textarea>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="field">
+            <label>Trabajos realizados</label>
+            <textarea id="trabajos" placeholder="Detalle las tareas ejecutadas durante la intervención..."></textarea>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="field">
+            <label>Próxima intervención recomendada</label>
+            <input type="text" id="proxima" placeholder="Ej: 12 meses / Mantenimiento preventivo">
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCIONES -->
+      <div class="form-actions">
+        <button class="btn-secondary" onclick="limpiarFormulario()">Limpiar</button>
+        <button class="btn-primary" id="btn-guardar" onclick="guardarInforme()">GUARDAR INFORME</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- VISTA: LISTA INFORMES -->
+  <div id="view-lista">
+    <div class="section-header">
+      <h1>Informes <span>Guardados</span></h1>
+      <p>Historial de trabajos registrados</p>
+    </div>
+    <div id="lista-container"><div class="loading">Cargando informes</div></div>
+  </div>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+// ─── CONFIGURACIÓN SUPABASE ───────────────────────────────────────────────────
+const SUPABASE_URL = 'https://ncbdfxqcgpncxobcvptn.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jYmRmeHFjZ3BuY3hvYmN2cHRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMDQ5MjcsImV4cCI6MjA5NDg4MDkyN30.Monic_ZoJFzyZ70eICMsWXXo4EurKe8zuDIKfYhxveQ';
+const HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+
+// ─── ENSAYOS DISPONIBLES ──────────────────────────────────────────────────────
+const ENSAYOS = [
+  'Resistencia de aislamiento',
+  'Índice de polarización (IP)',
+  'Resistencia de contacto',
+  'Resistencia de devanados',
+  'Relación de transformación (TTR)',
+  'Rigidez dieléctrica aceite',
+  'Factor de potencia (tan δ)',
+  'Corriente de excitación',
+  'Impedancia de secuencia',
+  'Respuesta en frecuencia (FRA)',
+  'Termografía infrarroja',
+  'Prueba de continuidad',
+  'Puesta a tierra / Resistividad',
+  'Ultrasonido / DGA',
+  'Calibración instrumento',
+];
+
+// ─── ESTADO ───────────────────────────────────────────────────────────────────
+let ensayosSeleccionados = new Set();
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+  renderEnsayos();
+  crearTablasSiNoExisten();
+});
+
+// ─── RENDER ENSAYOS ───────────────────────────────────────────────────────────
+function renderEnsayos() {
+  const grid = document.getElementById('ensayos-grid');
+  grid.innerHTML = '';
+  ENSAYOS.forEach(e => {
+    const div = document.createElement('div');
+    div.className = 'ensayo-item';
+    div.dataset.ensayo = e;
+    div.innerHTML = `<span class="checkmark"></span><span class="ensayo-name">${e}</span>`;
+    div.onclick = () => toggleEnsayo(e, div);
+    grid.appendChild(div);
+  });
+}
+
+function toggleEnsayo(nombre, el) {
+  if (ensayosSeleccionados.has(nombre)) {
+    ensayosSeleccionados.delete(nombre);
+    el.classList.remove('selected');
+  } else {
+    ensayosSeleccionados.add(nombre);
+    el.classList.add('selected');
+  }
+  renderResultados();
+}
+
+function renderResultados() {
+  const sec = document.getElementById('resultados-section');
+  const lista = document.getElementById('resultados-lista');
+  if (ensayosSeleccionados.size === 0) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  lista.innerHTML = '';
+  ensayosSeleccionados.forEach(e => {
+    const id = 'res_' + e.replace(/\s+/g,'_').replace(/[()\/]/g,'');
+    const row = document.createElement('div');
+    row.className = 'resultado-row';
+    row.innerHTML = `
+      <span class="ensayo-tag">${e}</span>
+      <select id="${id}_estado" class="resultado-select" onchange="colorearEstado(this)">
+        <option value="">Estado</option>
+        <option value="OK">✅ OK</option>
+        <option value="FALLA">❌ Falla</option>
+        <option value="CONDICIONAL">⚠️ Condicional</option>
+        <option value="N/A">— N/A</option>
+      </select>
+      <input type="text" id="${id}_valor" placeholder="Valor medido" style="padding:6px 8px;font-size:12px;">
+    `;
+    lista.appendChild(row);
+  });
+}
+
+function colorearEstado(sel) {
+  sel.className = 'resultado-select';
+  if (sel.value === 'OK') sel.classList.add('resultado-ok');
+  else if (sel.value === 'FALLA') sel.classList.add('resultado-fail');
+  else if (sel.value === 'CONDICIONAL') sel.classList.add('resultado-cond');
+}
+
+// ─── CREAR TABLA EN SUPABASE (si no existe, via SQL RPC) ─────────────────────
+async function crearTablasSiNoExisten() {
+  // Intentamos insertar en la tabla. Si falla con 42P01 (tabla no existe) la creamos.
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/informes?limit=1`, { headers: HEADERS });
+    if (r.status === 404 || (await r.text()).includes('does not exist')) {
+      await crearTabla();
+    }
+  } catch(e) { /* la tabla ya existe */ }
+}
+
+async function crearTabla() {
+  const sql = `
+    CREATE TABLE IF NOT EXISTS informes (
+      id BIGSERIAL PRIMARY KEY,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      tecnico TEXT,
+      fecha DATE,
+      empresa TEXT,
+      ot TEXT,
+      equipo TEXT,
+      tag_equipo TEXT,
+      tipo_equipo TEXT,
+      tension TEXT,
+      potencia TEXT,
+      planta TEXT,
+      area TEXT,
+      direccion TEXT,
+      gps TEXT,
+      ensayos JSONB,
+      condicion_general TEXT,
+      observaciones TEXT,
+      trabajos TEXT,
+      proxima TEXT
+    );
+  `;
+  await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
+    method: 'POST',
+    headers: HEADERS,
+    body: JSON.stringify({ sql })
+  });
+}
+
+// ─── GUARDAR INFORME ──────────────────────────────────────────────────────────
+async function guardarInforme() {
+  const tecnico = document.getElementById('tecnico').value.trim();
+  const fecha = document.getElementById('fecha').value;
+  const equipo = document.getElementById('equipo').value.trim();
+  const planta = document.getElementById('planta').value.trim();
+  const condicion = document.getElementById('condicion_general').value;
+
+  if (!tecnico || !fecha || !equipo || !planta || !condicion) {
+    showToast('Complete los campos obligatorios (*)', 'error');
+    return;
+  }
+
+  // Recopilar resultados de ensayos
+  const ensayosData = {};
+  ensayosSeleccionados.forEach(e => {
+    const id = 'res_' + e.replace(/\s+/g,'_').replace(/[()\/]/g,'');
+    const estado = document.getElementById(id + '_estado')?.value || '';
+    const valor = document.getElementById(id + '_valor')?.value || '';
+    ensayosData[e] = { estado, valor };
+  });
+
+  const payload = {
+    tecnico,
+    fecha,
+    empresa: document.getElementById('empresa').value.trim(),
+    ot: document.getElementById('ot').value.trim(),
+    equipo,
+    tag_equipo: document.getElementById('tag_equipo').value.trim(),
+    tipo_equipo: document.getElementById('tipo_equipo').value,
+    tension: document.getElementById('tension').value.trim(),
+    potencia: document.getElementById('potencia').value.trim(),
+    planta,
+    area: document.getElementById('area').value.trim(),
+    direccion: document.getElementById('direccion').value.trim(),
+    gps: document.getElementById('gps').value.trim(),
+    ensayos: ensayosData,
+    condicion_general: condicion,
+    observaciones: document.getElementById('observaciones').value.trim(),
+    trabajos: document.getElementById('trabajos').value.trim(),
+    proxima: document.getElementById('proxima').value.trim(),
+  };
+
+  const btn = document.getElementById('btn-guardar');
+  btn.disabled = true;
+  btn.textContent = 'GUARDANDO...';
+
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/informes`, {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify(payload)
+    });
+
+    if (r.ok) {
+      showToast('✓ Informe guardado correctamente', 'success');
+      limpiarFormulario();
+    } else {
+      const err = await r.json();
+      // Si la tabla no existe, intentar crearla y reintentar
+      if (err.code === '42P01') {
+        await crearTablaManual();
+        await guardarInforme();
+        return;
+      }
+      showToast('Error al guardar. Revise la consola.', 'error');
+      console.error(err);
+    }
+  } catch(e) {
+    showToast('Error de conexión', 'error');
+    console.error(e);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'GUARDAR INFORME';
+}
+
+// ─── CARGAR INFORMES ──────────────────────────────────────────────────────────
+async function cargarInformes() {
+  const container = document.getElementById('lista-container');
+  container.innerHTML = '<div class="loading">Cargando informes</div>';
+
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/informes?order=created_at.desc&limit=100`, { headers: HEADERS });
+    const data = await r.json();
+
+    if (!Array.isArray(data) || data.length === 0) {
+      container.innerHTML = '<div class="empty-state">No hay informes registrados aún</div>';
+      return;
+    }
+
+    container.innerHTML = data.map(inf => {
+      const badgeClass = inf.condicion_general === 'OK' ? 'badge-ok' : inf.condicion_general === 'FALLA' ? 'badge-falla' : 'badge-condicional';
+      const badgeText = inf.condicion_general === 'OK' ? 'APTO' : inf.condicion_general === 'FALLA' ? 'FALLA' : 'CONDICIONAL';
+      const ensayosTags = Object.keys(inf.ensayos || {}).map(e => `<span class="tag">${e}</span>`).join('');
+      const fecha = inf.fecha ? new Date(inf.fecha + 'T12:00:00').toLocaleDateString('es-CL') : '—';
+
+      return `
+        <div class="informe-card">
+          <div class="informe-card-header">
+            <div>
+              <div class="informe-equipo">${inf.equipo || '—'}</div>
+              <div class="informe-meta">${inf.tecnico} · ${fecha} · ${inf.planta || '—'}</div>
+              ${inf.empresa ? `<div class="informe-meta">${inf.empresa}${inf.ot ? ' / ' + inf.ot : ''}</div>` : ''}
+            </div>
+            <span class="informe-badge ${badgeClass}">${badgeText}</span>
+          </div>
+          ${inf.observaciones ? `<div style="font-size:13px;color:var(--muted);margin-top:8px;">${inf.observaciones}</div>` : ''}
+          ${ensayosTags ? `<div class="informe-tags">${ensayosTags}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+  } catch(e) {
+    container.innerHTML = '<div class="empty-state">Error al cargar informes</div>';
+    console.error(e);
+  }
+}
+
+// ─── NAVEGACIÓN ───────────────────────────────────────────────────────────────
+function showView(v) {
+  document.getElementById('view-nuevo').style.display = v === 'nuevo' ? 'block' : 'none';
+  document.getElementById('view-lista').style.display = v === 'lista' ? 'block' : 'none';
+  document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', (i === 0) === (v === 'nuevo')));
+  if (v === 'lista') cargarInformes();
+}
+
+// ─── UTILIDADES ───────────────────────────────────────────────────────────────
+function limpiarFormulario() {
+  ['tecnico','empresa','ot','equipo','tag_equipo','tension','potencia','planta','area','direccion','gps','observaciones','trabajos','proxima'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+  document.getElementById('tipo_equipo').value = '';
+  document.getElementById('condicion_general').value = '';
+  ensayosSeleccionados.clear();
+  renderEnsayos();
+  renderResultados();
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show ${type}`;
+  setTimeout(() => t.className = '', 3500);
+}
+</script>
+</body>
+</html>
