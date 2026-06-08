@@ -460,6 +460,69 @@
     .nav-tab { padding: 6px 10px; font-size: 10px; }
     .header-org { display: none; }
   }
+
+  /* FOTOS */
+  .foto-upload {
+    border: 1px dashed var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    overflow: hidden;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface2);
+  }
+
+  .foto-upload:hover { border-color: var(--accent); background: rgba(0,229,255,0.03); }
+
+  .foto-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    min-height: 140px;
+  }
+
+  .foto-preview img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 3px;
+    display: block;
+  }
+
+  .foto-icon { font-size: 28px; line-height: 1; }
+
+  .foto-hint {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    font-family: var(--mono);
+    letter-spacing: 0.5px;
+  }
+
+  .btn-remove-foto {
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 5px 12px;
+    background: none;
+    color: var(--error);
+    border: 1px solid var(--error);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .btn-remove-foto:hover { background: rgba(255,61,61,0.1); }
+
 </style>
 </head>
 <body>
@@ -502,11 +565,7 @@
         </div>
         <div class="form-row">
           <div class="field">
-            <label>Empresa / Contrato</label>
-            <input type="text" id="empresa" placeholder="Nombre de la empresa o proyecto">
-          </div>
-          <div class="field">
-            <label>Orden de trabajo / N° informe</label>
+            <label>N° de Trabajo</label>
             <input type="text" id="ot" placeholder="OT-001">
           </div>
         </div>
@@ -521,7 +580,17 @@
           </div>
           <div class="field">
             <label>Código / TAG del equipo</label>
-            <input type="text" id="tag_equipo" placeholder="Ej: TR-01-SAS">
+            <input type="text" id="tag_equipo" placeholder="Ej: 52-AYO-01">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Marca</label>
+            <input type="text" id="marca" placeholder="Ej: ABB, Siemens, Schneider...">
+          </div>
+          <div class="field">
+            <label>N° de Serie / N° ANDE</label>
+            <input type="text" id="nro_serie" placeholder="Ej: SN-2024-001">
           </div>
         </div>
         <div class="form-row triple">
@@ -529,18 +598,22 @@
             <label>Tipo de equipo</label>
             <select id="tipo_equipo">
               <option value="">— Seleccionar —</option>
-              <option>Transformador de Potencia</option>
               <option>Transformador de Distribución</option>
               <option>Transformador de Medida (TC/TP)</option>
               <option>Interruptor / Disyuntor</option>
               <option>Seccionador</option>
+              <option>Reconectador</option>
+              <option>Regulador de Tensión</option>
+              <option>Banco de Capacitores</option>
               <option>Celda MT/AT</option>
+              <option>GIS</option>
               <option>Tablero BT</option>
               <option>Motor Eléctrico</option>
               <option>Generador</option>
               <option>Puesta a Tierra</option>
               <option>Cable / Línea</option>
-              <option>Instrumento / Sensor</option>
+              <option>Aisladores / Descargadores</option>
+              <option>Aceite Dieléctrico</option>
               <option>Otro</option>
             </select>
           </div>
@@ -559,7 +632,7 @@
         <div class="form-section-label">Ubicación</div>
         <div class="form-row">
           <div class="field">
-            <label>Planta / Instalación *</label>
+            <label>Ubicación del equipo *</label>
             <input type="text" id="planta" placeholder="Ej: Subestación Norte">
           </div>
           <div class="field">
@@ -587,6 +660,34 @@
       <div class="form-section" id="resultados-section" style="display:none">
         <div class="form-section-label">Resultados por ensayo</div>
         <div id="resultados-lista"></div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-label">Fotografías</div>
+        <div class="form-row">
+          <div class="field">
+            <label>Foto del equipo</label>
+            <div class="foto-upload" id="foto-equipo-area" onclick="document.getElementById('foto_equipo').click()">
+              <input type="file" id="foto_equipo" accept="image/*" capture="environment" style="display:none" onchange="previewFoto(this,'preview-equipo','foto-equipo-area')">
+              <div id="preview-equipo" class="foto-preview">
+                <span class="foto-icon">📷</span>
+                <span class="foto-hint">Toca para agregar foto del equipo</span>
+              </div>
+            </div>
+            <button class="btn-remove-foto" id="btn-remove-equipo" style="display:none" onclick="removeFoto('foto_equipo','preview-equipo','foto-equipo-area','btn-remove-equipo')">✕ Quitar foto</button>
+          </div>
+          <div class="field">
+            <label>Foto del trabajo</label>
+            <div class="foto-upload" id="foto-trabajo-area" onclick="document.getElementById('foto_trabajo').click()">
+              <input type="file" id="foto_trabajo" accept="image/*" capture="environment" style="display:none" onchange="previewFoto(this,'preview-trabajo','foto-trabajo-area','btn-remove-trabajo')">
+              <div id="preview-trabajo" class="foto-preview">
+                <span class="foto-icon">📷</span>
+                <span class="foto-hint">Toca para agregar foto del trabajo</span>
+              </div>
+            </div>
+            <button class="btn-remove-foto" id="btn-remove-trabajo" style="display:none" onclick="removeFoto('foto_trabajo','preview-trabajo','foto-trabajo-area','btn-remove-trabajo')">✕ Quitar foto</button>
+          </div>
+        </div>
       </div>
 
       <div class="form-section">
@@ -752,10 +853,11 @@ async function guardarInforme() {
 
   const payload = {
     tecnico, fecha,
-    empresa: document.getElementById('empresa').value.trim(),
     ot: document.getElementById('ot').value.trim(),
     equipo,
     tag_equipo: document.getElementById('tag_equipo').value.trim(),
+    marca: document.getElementById('marca').value.trim(),
+    nro_serie: document.getElementById('nro_serie').value.trim(),
     tipo_equipo: document.getElementById('tipo_equipo').value,
     tension: document.getElementById('tension').value.trim(),
     potencia: document.getElementById('potencia').value.trim(),
@@ -765,6 +867,8 @@ async function guardarInforme() {
     gps: document.getElementById('gps').value.trim(),
     ensayos: ensayosData,
     condicion_general: condicion,
+    foto_equipo: window._fotoEquipoB64 || null,
+    foto_trabajo: window._fotoTrabajoB64 || null,
     observaciones: document.getElementById('observaciones').value.trim(),
     trabajos: document.getElementById('trabajos').value.trim(),
     proxima: document.getElementById('proxima').value.trim(),
@@ -843,7 +947,7 @@ function showView(v) {
 }
 
 function limpiarFormulario() {
-  ['tecnico','empresa','ot','equipo','tag_equipo','tension','potencia','planta','area','direccion','gps','observaciones','trabajos','proxima'].forEach(id => {
+  ['tecnico','ot','equipo','tag_equipo','marca','nro_serie','tension','potencia','planta','area','direccion','gps','observaciones','trabajos','proxima'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -853,6 +957,42 @@ function limpiarFormulario() {
   ensayosSeleccionados.clear();
   renderEnsayos();
   renderResultados();
+  removeFoto('foto_equipo','preview-equipo','foto-equipo-area','btn-remove-equipo');
+  removeFoto('foto_trabajo','preview-trabajo','foto-trabajo-area','btn-remove-trabajo');
+}
+
+
+// ─── FOTOS ────────────────────────────────────────────────────────────────────
+function previewFoto(input, previewId, areaId, btnId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const b64 = e.target.result;
+    // Guardar en variable global
+    if (input.id === 'foto_equipo') window._fotoEquipoB64 = b64;
+    if (input.id === 'foto_trabajo') window._fotoTrabajoB64 = b64;
+    // Mostrar preview
+    const preview = document.getElementById(previewId);
+    preview.innerHTML = `<img src="${b64}" alt="foto">`;
+    const btn = document.getElementById(btnId || 'btn-remove-' + (input.id === 'foto_equipo' ? 'equipo' : 'trabajo'));
+    if (btn) btn.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeFoto(inputId, previewId, areaId, btnId) {
+  const input = document.getElementById(inputId);
+  if (input) input.value = '';
+  if (inputId === 'foto_equipo') window._fotoEquipoB64 = null;
+  if (inputId === 'foto_trabajo') window._fotoTrabajoB64 = null;
+  const preview = document.getElementById(previewId);
+  if (preview) {
+    const isEquipo = inputId === 'foto_equipo';
+    preview.innerHTML = `<span class="foto-icon">📷</span><span class="foto-hint">Toca para agregar foto del ${isEquipo ? 'equipo' : 'trabajo'}</span>`;
+  }
+  const btn = document.getElementById(btnId);
+  if (btn) btn.style.display = 'none';
 }
 
 function exportarPDF(inf) {
@@ -945,17 +1085,18 @@ function exportarPDF(inf) {
 
   seccion('Identificacion');
   filaDupla('Técnico', inf.tecnico, 'Fecha', fecha);
-  filaDupla('OT / N° Informe', inf.ot, 'Sección', 'LCC — DD-MEQ — ANDE');
+  filaDupla('N° de Trabajo', inf.ot, 'Sección', 'LCC — DD-MEQ — ANDE');
   y += 2;
 
   seccion('Equipo Intervenido');
   filaDupla('Nombre del equipo', inf.equipo, 'TAG / Código', inf.tag_equipo);
+  filaDupla('Marca', inf.marca, 'N° Serie / N° ANDE', inf.nro_serie);
   filaDupla('Tipo de equipo', inf.tipo_equipo, 'Tensión nominal', inf.tension);
   filaDupla('Potencia / Corriente', inf.potencia, '', '');
   y += 2;
 
   seccion('Ubicacion');
-  filaDupla('Planta / Instalación', inf.planta, 'Área / Sala', inf.area);
+  filaDupla('Ubicación del equipo', inf.planta, 'Área / Sala', inf.area);
   filaDupla('Dirección', inf.direccion, 'GPS', inf.gps);
   y += 2;
 
@@ -1017,6 +1158,30 @@ function exportarPDF(inf) {
     doc.setFontSize(8); doc.setFont('helvetica', 'normal'); doc.setTextColor(30, 30, 30);
     doc.text(inf.proxima, MARGIN, y);
     y += 10;
+  }
+
+  // ── FOTOS ──
+  const fotos = [
+    { label: 'Foto del Equipo', data: inf.foto_equipo },
+    { label: 'Foto del Trabajo', data: inf.foto_trabajo },
+  ].filter(f => f.data);
+
+  if (fotos.length > 0) {
+    seccion('Registro Fotografico');
+    const fotoW = fotos.length === 1 ? COL : (COL - 6) / 2;
+    fotos.forEach((foto, i) => {
+      if (y > 220) { doc.addPage(); y = 18; }
+      const xPos = MARGIN + i * (fotoW + 6);
+      try {
+        // Detectar tipo
+        const mime = foto.data.startsWith('data:image/png') ? 'PNG' : 'JPEG';
+        const b64data = foto.data.split(',')[1];
+        doc.addImage(b64data, mime, xPos, y, fotoW, fotoW * 0.65);
+        doc.setFontSize(7); doc.setFont('helvetica', 'normal'); doc.setTextColor(80, 100, 140);
+        doc.text(foto.label, xPos + fotoW / 2, y + fotoW * 0.65 + 4, { align: 'center' });
+      } catch(e) { console.warn('No se pudo insertar foto', e); }
+    });
+    y += fotoW * 0.65 + 10;
   }
 
   if (y > 240) { doc.addPage(); y = 18; }
